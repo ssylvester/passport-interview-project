@@ -1,7 +1,9 @@
 <template>
   <div class="root-node container">
     <header>
-      Root Node <button @click="addFactory">add factory</button>
+      Root Node 
+      <button @click="addFactory">add factory</button>
+      <button @click="reset">reset</button>
     </header>
     <small>
       Click on a Factory to edit it's values. 
@@ -32,6 +34,7 @@ export default {
   methods: {
     ...mapActions([
       'addFactory',
+      'reset'
     ]),
   },
   computed: mapState([

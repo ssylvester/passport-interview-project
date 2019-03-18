@@ -14,7 +14,8 @@
     "vuex": "^3.0.1",
     "uuid": "*",
     "mini.css": "*",
-    "axios": "*"
+    "axios": "*",
+    "lodash": "*"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

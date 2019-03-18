@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { isEqual } from 'lodash';
 
 // helpers
 import { create as createTree, validate as validateTree } from '@/helpers/tree';
@@ -166,7 +167,7 @@ export const actions = {
     // send up the new tree
     dispatch('uploadTree');
   },
-  refreshTree: ({ commit, state }) => {
+  refreshTree: ({ commit, dispatch, state }) => {
     // return a promise since we're going to be making an api call
     return new Promise((resolve, reject) => {
       // set loading
@@ -175,17 +176,20 @@ export const actions = {
       // first, get a tree from the api
       apiHandler.get()
         .then((tree) => {
-          // make sure that we're not updating
-          if (!state.updating) {
-            // if we got a tree back...
-            if (tree) {
-              // set the tree in the store
-              commit('setTree', tree);
-              resolve();
-            } else {
-              // no tree found, so we need to create one
-              commit('createTree');
-              resolve();
+          // is this tree different?
+          if (!isEqual(state.tree, tree)) {
+            // make sure that we're not updating
+            if (!state.updating) {
+              // if we got a tree back...
+              if (tree) {
+                // set the tree in the store
+                dispatch('setTree', tree);
+                resolve();
+              } else {
+                // no tree found, so we need to create one
+                dispatch('createTree');
+                resolve();
+              }
             }
           }
         })
@@ -215,6 +219,19 @@ export const actions = {
       .finally(() => {
         commit('setUpdating', false);
       });
+  },
+  reset: ({ dispatch, state }) => {
+    // get the given tree
+    const treeId = state.tree.id;
+
+    // create a new one
+    const newTree = createTree();
+
+    // use the old id
+    newTree.id = treeId;
+
+    // update
+    dispatch('setTree', newTree);
   },
 };
 
