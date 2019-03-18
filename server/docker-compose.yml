@@ -1,0 +1,36 @@
+version: '2'
+services:
+  redis:
+    image: redis
+    cpu_shares: 100
+    mem_limit: 524288000
+    container_name: cache
+    ports:
+      - 6379:6379
+    logging:
+        driver: awslogs
+        options: 
+          awslogs-group: passport-redis
+          awslogs-region: us-east-1
+          awslogs-stream-prefix: redis
+  app:
+    image: 326779839432.dkr.ecr.us-east-1.amazonaws.com/passport-express:v5
+    cpu_shares: 100
+    mem_limit: 524288000
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - 3000:3000
+    environment:
+      - REDIS_URL=redis://172.17.0.1:6379
+      - PORT=3000
+    command:
+      sh -c 'node /usr/src/app/app.js'
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: passport-app
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: app
