@@ -7,6 +7,7 @@ const Redis = require('./redisHandler');
 const treeGet = require('../objects/tree/get');
 const treeList = require('../objects/tree/list');
 const treePut = require('../objects/tree/put');
+const treeDel = require('../objects/tree/del');
 
 // create the app
 const app = express();
@@ -30,6 +31,10 @@ app.get('/tree', async (req, res)  => {
 
 app.put('/tree/:id', async (req, res) => {
   await treePut(req, res, redis);
+});
+
+app.delete('/tree/:id', async (req, res) => {
+  await treeDel(req, res, redis);
 });
 
 module.exports = app;

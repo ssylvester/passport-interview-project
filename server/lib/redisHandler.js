@@ -72,6 +72,25 @@ class RedisHandler {
     });
   }
 
+  delete(key) {
+    return new Promise((resolve, reject) => {
+      // grab the client first
+      const client = this.getClient();
+
+      // get em
+      client.DEL(key, (err, reply) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(reply);
+        }
+
+        // clean up after yourself
+        client.quit();
+      });
+    });
+  }
+
   /**
    * set a value
    * 

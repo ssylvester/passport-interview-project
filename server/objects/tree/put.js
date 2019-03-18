@@ -16,6 +16,16 @@ module.exports = async function (req, res, redis) {
   // grab the body
   const tree = req.body;
 
+  // make sure that the tree is valid
+  if(
+    typeof tree !== 'object'
+    || typeof tree.id !== 'string'
+    || typeof tree.factories !== 'object'
+  ) {
+    res.status(500);
+    return res.send('Invalid tree');
+  }
+
   // stringify the body response
   const treeString = JSON.stringify(tree);
 

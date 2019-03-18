@@ -19,7 +19,7 @@ app.__set__('redis', new RedisHandler('redis://localhost', mockRedis));
 describe('app tests', () => {
   it('should respond with the correct data results', (done) => {
     // set tree contents to be used later
-    const treeContents = { name: 'john' };
+    const treeContents = { id: 'john', factories: {}};
 
     // put something into the db
     request(app)
@@ -51,6 +51,21 @@ describe('app tests', () => {
         if (err) throw err;
         // make sure that the list contains the rigt values
         expect(res.body).to.eql(['id116']);
+        done();
+      });
+  });
+
+  it('bad put', (done) => {
+    // set tree contents to be used later
+    const treeContents = { name: 'john' };
+
+    // put something into the db
+    request(app)
+      .put('/tree/id116')
+      .send(treeContents)
+      .expect(500)
+      .end(function (err, res) {
+        if (err) throw err;
         done();
       });
   });
