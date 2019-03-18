@@ -8,7 +8,7 @@ module.exports = async function(req, res, redis) {
     const id = req.params.id;
 
     // invalid? return a 500
-    if(typeof id !== 'string' && id.length > 5) {
+    if(typeof id !== 'string' && id.length > 5 && !/^[a-z0-9-]+$/.test(id)) {
         res.status(500);
         return res.send('Invalid id');
     }
