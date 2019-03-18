@@ -21,9 +21,16 @@ module.exports = async function (req, res, redis) {
     typeof tree !== 'object'
     || typeof tree.id !== 'string'
     || typeof tree.factories !== 'object'
+    || Array.isArray(tree.factories)
   ) {
     res.status(500);
     return res.send('Invalid tree');
+  }
+
+  // make sure that the tree id matches the requested id
+  if (tree.id !== id) {
+    res.status(500);
+    return res.send('request and payload ids must match');
   }
 
   // stringify the body response

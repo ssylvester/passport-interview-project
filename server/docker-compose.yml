@@ -14,7 +14,7 @@ services:
           awslogs-region: us-east-1
           awslogs-stream-prefix: redis
   app:
-    image: 326779839432.dkr.ecr.us-east-1.amazonaws.com/passport-express:v5
+    image: 326779839432.dkr.ecr.us-east-1.amazonaws.com/passport-express:v7
     cpu_shares: 100
     mem_limit: 524288000
     links:

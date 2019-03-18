@@ -23,7 +23,7 @@ describe('app tests', () => {
 
     // put something into the db
     request(app)
-      .put('/tree/id116')
+      .put(`/tree/${treeContents.id}`)
       .send(treeContents)
       .expect('Content-Type', /json/)
       .expect(200)
@@ -33,7 +33,7 @@ describe('app tests', () => {
 
     // now get the tree
     request(app)
-      .get('/tree/id116')
+      .get(`/tree/${treeContents.id}`)
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function (err, res) {
@@ -50,7 +50,7 @@ describe('app tests', () => {
       .end(function (err, res) {
         if (err) throw err;
         // make sure that the list contains the rigt values
-        expect(res.body).to.eql(['id116']);
+        expect(res.body).to.eql([treeContents.id]);
         done();
       });
   });
@@ -61,11 +61,37 @@ describe('app tests', () => {
 
     // put something into the db
     request(app)
+      .put(`/tree/${treeContents.id}`)
+      .send(treeContents)
+      .expect(500)
+      .end(function (err, res) {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it('invalid id', (done) => {
+    // set tree contents to be used later
+    const treeContents = { id: 'john', factories: {}};
+
+    // put something into the db with a bad id
+    request(app)
+      .put('/tree/id116;')
+      .send(treeContents)
+      .expect(500)
+      .end(function (err, res) {
+        if (err) throw err;
+        
+      });
+
+    // put something with mismatched id
+    request(app)
       .put('/tree/id116')
       .send(treeContents)
       .expect(500)
       .end(function (err, res) {
         if (err) throw err;
+        expect(res.text).to.eq('request and payload ids must match');
         done();
       });
   });

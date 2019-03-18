@@ -18,7 +18,7 @@ app.use(cors());
 
 // create the redis client
 const redisUrl = process.env.REDIS_URL || 'redis://localhost';
-const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis(redisUrl);
 
 // routes
 app.get('/tree/:id', async (req, res) => {

@@ -16,10 +16,19 @@ module.exports = async function (req, res, redis) {
   // build the key
   const redisKey = RedisHandler.createKeyFromId('tree', id);
 
-  // get em
-  const tree = await redis.delete(redisKey);
+  // check for the id first
+  const tree = await redis.get(redisKey);
 
-  // nothig? return 404
-  res.status(200);
-  res.send('Deleted');
+  // delete if we found it
+  if (tree) {
+    // get em
+    await redis.delete(redisKey);
+
+    // send 200
+    res.status(200);
+    res.send('Deleted');
+  } else {
+    res.status(404);
+    res.send('Not Found');
+  }
 }
